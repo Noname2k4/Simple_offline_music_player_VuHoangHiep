@@ -107,7 +107,7 @@ Clone project
 
 ```bash
 git clone https://github.com/Noname2k4/Simple_offline_music_player_VuHoangHiep
-cd note_app
+cd offline_music_player
 ```
 
 Cài đặt dependencies và chạy ứng dụng
