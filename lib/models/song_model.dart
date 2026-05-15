@@ -12,6 +12,7 @@ class SongModel {
     required this.id,
     required this.title,
     required this.artist,
+
     this.album,
     required this.filePath,
     this.duration,

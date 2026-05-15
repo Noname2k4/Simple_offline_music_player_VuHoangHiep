@@ -1,5 +1,6 @@
 import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
+import '../models/playback_state_model.dart';
 
 class AudioPlayerService {
   final AudioPlayer _audioPlayer = AudioPlayer();
@@ -13,12 +14,12 @@ class AudioPlayerService {
   Duration? get currentDuration => _audioPlayer.duration;
   bool get isPlaying => _audioPlayer.playing;
 
-  Stream<PlaybackState> get playbackStateStream {
-    return Rx.combineLatest3<Duration, Duration?, bool, PlaybackState>(
+  Stream<PlaybackUiState> get playbackStateStream {
+    return Rx.combineLatest3<Duration, Duration?, bool, PlaybackUiState>(
       positionStream,
       durationStream,
       playingStream,
-      (position, duration, isPlaying) => PlaybackState(
+      (position, duration, isPlaying) => PlaybackUiState(
         position: position,
         duration: duration ?? Duration.zero,
         isPlaying: isPlaying,
@@ -64,24 +65,5 @@ class AudioPlayerService {
 
   void dispose() {
     _audioPlayer.dispose();
-  }
-}
-
-class PlaybackState {
-  final Duration position;
-  final Duration duration;
-  final bool isPlaying;
-
-  PlaybackState({
-    required this.position,
-    required this.duration,
-    required this.isPlaying,
-  });
-
-  double get progress {
-    if (duration.inMilliseconds > 0) {
-      return position.inMilliseconds / duration.inMilliseconds;
-    }
-    return 0.0;
   }
 }

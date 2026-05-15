@@ -1,47 +1,35 @@
+import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
 
 class PermissionService {
-  // Request storage permission
-  Future<bool> requestStoragePermission() async {
-    var status = await Permission.storage.status;
+  Future<bool> requestMusicPermission() async {
+    Permission permission;
 
-    if (status.isGranted) {
+    if (Platform.isAndroid) {
+      if (await _isAndroid13OrAbove()) {
+        permission = Permission.audio; 
+      } else {
+        permission = Permission.storage; 
+      }
+    } else {
       return true;
     }
 
-    if (status.isDenied) {
-      status = await Permission.storage.request();
-      return status.isGranted;
-    }
+    final status = await permission.status;
 
-    if (status.isPermanentlyDenied) {
+    if (status.isGranted) return true;
+
+    final result = await permission.request();
+
+    if (result.isPermanentlyDenied) {
       await openAppSettings();
       return false;
     }
 
-    return false;
+    return result.isGranted;
   }
 
-  // Request audio permission (Android 13+)
-  Future<bool> requestAudioPermission() async {
-    if (await Permission.audio.isGranted) {
-      return true;
-    }
-
-    var status = await Permission.audio.request();
-
-    if (status.isPermanentlyDenied) {
-      await openAppSettings();
-      return false;
-    }
-
-    return status.isGranted;
-  }
-
-  // Check if permissions are granted
-  Future<bool> hasPermissions() async {
-    bool storagePermission = await Permission.storage.isGranted;
-    bool audioPermission = await Permission.audio.isGranted;
-    return storagePermission || audioPermission;
+  Future<bool> _isAndroid13OrAbove() async {
+    return (await Permission.audio.status) != PermissionStatus.denied;
   }
 }
