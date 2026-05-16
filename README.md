@@ -6,6 +6,7 @@ Office Music App được phát triển bằng Flutter, sử dụng Provider đ�
 
 ## 🎥 Demo Video
 
+👉 [Video Demo](https://drive.google.com/drive/folders/1OZ8lt2iW8EAAtamHAuxAe9buGmja1AQW?usp=sharing)
 
 ---
 
